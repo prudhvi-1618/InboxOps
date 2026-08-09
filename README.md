@@ -1,13 +1,11 @@
 # Inbox Router — Alumnx AI Labs FDE Challenge
 
-**candidate_id:** `YOUR_EMAIL_HERE`
-**Backend:** `https://YOUR_RENDER_URL_HERE` ← fill after deploy
-**Frontend:** `https://YOUR_VERCEL_URL_HERE` ← fill after deploy
+**candidate_id:** `nirrujogiprudhvi@gmail.com`
 
 ## Setup (3 commands)
 
 ```bash
-git clone <repo-url> && cd inbox-router
+git clone https://github.com/prudhvi-1618/InboxOps.git && cd InboxOps
 cp backend/.env.example backend/.env   # fill in your keys
 cd backend && npm install && npm start
 ```
