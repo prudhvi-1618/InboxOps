@@ -17,10 +17,44 @@ cd frontend && cp .env.example .env.local && npm install && npm run dev
 
 ## Architecture
 
-- **Backend:** Node.js + Express, SQLite (better-sqlite3), deployed on Render
-- **Frontend:** Next.js, deployed on Vercel
-- **LLM:** Gemini 1.5 Flash via `@google/generative-ai`
+- **Backend:** Python + FastAPI, SQLite (aiosqlite)
+- **Frontend:** React + Vite
+- **LLM:** Gemini 3.6 Flash / 1.5 Flash via `google-genai` and LangGraph
 - **Task API:** Shared grading API at `TASK_API_BASE_URL`
+
+### LangGraph Email Workflow
+
+```mermaid
+flowchart TD
+    START([START]) --> PRE[Preprocess Email]
+
+    PRE --> ANALYZE[Analyze Email<br/>Gemini]
+
+    ANALYZE --> HYGIENE{Actionable?}
+
+    HYGIENE -->|No: Spam / Newsletter / OOO| SKIP[Skip]
+    
+    HYGIENE -->|Yes| EXTRACT[Extract Fields<br/>value / deadline / company / intent]
+
+    EXTRACT --> ROUTE[Route Email]
+
+    ROUTE --> PRIORITY[Calculate Priority]
+
+    PRIORITY --> VALIDATE[Validate Decision]
+
+    VALIDATE -->|Ambiguous| TRIAGE[Triage]
+    VALIDATE -->|Clear| THREAD[Thread Reconciliation]
+
+    THREAD -->|New Thread| CREATE[Create Task]
+    THREAD -->|Existing Thread / Reply| UPDATE[Update Task]
+
+    SKIP --> RESULT[Record Result]
+    TRIAGE --> RESULT
+    CREATE --> RESULT
+    UPDATE --> RESULT
+
+    RESULT --> END([END])
+```
 
 ## Endpoints
 
