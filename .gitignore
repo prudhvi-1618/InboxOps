@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Env files — NEVER commit these
+.env
+.env.local
+.env.production
+
+# Build output
+.next/
+dist/
+build/
+
+# Database — local only, persisted on Render via disk
+backend/data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

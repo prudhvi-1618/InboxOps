@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: inbox-router-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: ENVIRONMENT
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CANDIDATE_ID
+        sync: false
+    disk:
+      name: sqlite-data
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1

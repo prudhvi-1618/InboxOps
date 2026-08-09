@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inbox_router_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - CANDIDATE_ID=${CANDIDATE_ID}
+      - ENVIRONMENT=development
+      - PORT=8000
+      - HOST=0.0.0.0
+    volumes:
+      - ./data:/app/data
+      - .:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
