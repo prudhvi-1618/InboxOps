@@ -2,7 +2,8 @@ import httpx
 from app.core.config import get_settings
 from app.core.exceptions import TaskAPIError
 from app.core.logging import get_logger
-from app.infrastructure.database.connection import get_db
+import aiosqlite
+from app.infrastructure.database.connection import get_db_path
 from app.infrastructure.database.repository import EmailDecisionRepository
 
 logger = get_logger(__name__)
@@ -26,7 +27,8 @@ class TaskAPIClient:
             return resp.json()
         except (httpx.ConnectError, httpx.ConnectTimeout, httpx.RequestError) as e:
             logger.debug(f"[task_client] HTTP connection failed ({e}), writing directly to DB")
-            async with get_db() as db:
+            async with aiosqlite.connect(str(get_db_path())) as db:
+                db.row_factory = aiosqlite.Row
                 repo = EmailDecisionRepository(db)
                 return await repo.create_task(payload)
 
@@ -39,7 +41,8 @@ class TaskAPIClient:
             return resp.json()
         except (httpx.ConnectError, httpx.ConnectTimeout, httpx.RequestError) as e:
             logger.debug(f"[task_client] HTTP connection failed ({e}), updating directly in DB")
-            async with get_db() as db:
+            async with aiosqlite.connect(str(get_db_path())) as db:
+                db.row_factory = aiosqlite.Row
                 repo = EmailDecisionRepository(db)
                 res = await repo.update_task(task_id, payload)
                 if not res:
@@ -58,6 +61,7 @@ class TaskAPIClient:
             return resp.json()
         except (httpx.ConnectError, httpx.ConnectTimeout, httpx.RequestError) as e:
             logger.debug(f"[task_client] HTTP connection failed ({e}), listing directly from DB")
-            async with get_db() as db:
+            async with aiosqlite.connect(str(get_db_path())) as db:
+                db.row_factory = aiosqlite.Row
                 repo = EmailDecisionRepository(db)
                 return await repo.list_tasks(filters)
